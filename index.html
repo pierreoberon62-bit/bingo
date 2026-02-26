@@ -13,49 +13,42 @@
             background-color: #f4f4f9;
             color: #333;
             margin: 0;
-            padding: 10px;
-            height: 100vh; /* Prend 100% de la hauteur de l'écran */
-            overflow: hidden; /* Empêche de scroller */
+            padding: 15px 10px 30px 10px; /* Un peu plus de marge en bas pour scroller confortablement */
+            min-height: 100vh; /* Prend au minimum 100% de l'écran, mais peut s'allonger */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         h1 {
             color: #2c3e50;
             margin: 0;
-            font-size: clamp(1.2rem, 3vh, 2rem); /* Taille de police dynamique */
-            flex-shrink: 0;
+            font-size: clamp(1.5rem, 4vw, 2rem); 
+            text-align: center;
         }
         #instructions {
-            font-size: clamp(0.85rem, 2vh, 1.1rem);
-            padding: 8px 15px;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            padding: 10px 15px;
             background-color: #e8f4f8;
             border-left: 5px solid #3498db;
             border-radius: 4px;
             width: 100%;
             max-width: 1000px;
             text-align: center;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(6, 1fr); /* 6 lignes forcées pour s'adapter à l'écran */
             gap: 5px;
             width: 100%;
             max-width: 1000px;
-            flex-grow: 1; /* La grille prend tout l'espace restant */
-            min-height: 0; /* Important pour que ça ne dépasse pas sur petits écrans */
+            flex-grow: 1;
         }
         .cell {
             background-color: #fff;
             border: 2px solid #bdc3c7;
             border-radius: 6px;
-            padding: 4px;
+            padding: 6px 4px;
             text-align: center;
             cursor: pointer;
             font-weight: 500;
@@ -64,10 +57,10 @@
             justify-content: center;
             transition: all 0.2s ease;
             user-select: none;
-            font-size: clamp(0.6rem, 1.2vh + 0.5vw, 1rem); /* Texte qui s'adapte à la case */
+            font-size: clamp(0.65rem, 2.5vw, 1rem); 
             word-wrap: break-word;
-            line-height: 1.1;
-            overflow: hidden;
+            line-height: 1.2;
+            min-height: 75px; /* Empêche les cases d'être trop petites sur téléphone */
         }
         .cell:active {
             transform: scale(0.95);
@@ -104,15 +97,14 @@
             background-color: #2c3e50;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: clamp(0.9rem, 2vh, 1.1rem);
+            padding: 15px 20px;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.2s;
-            flex-shrink: 0;
-            margin: 0;
             width: 100%;
             max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         button:hover {
             background-color: #1a252f;
@@ -123,7 +115,7 @@
 
     <h1>Bingo Mme Manchuelle</h1>
     <div id="instructions">
-        <strong>Phase 1 (Pronostics) :</strong> Clique sur les cases que tu penses voir se réaliser aujourd'hui. (Elles deviendront bleues).
+        <strong>Phase 1 (Pronostics) :</strong><br> Clique sur les cases que tu penses voir se réaliser aujourd'hui. (Elles deviendront bleues).
     </div>
 
     <div class="grid" id="bingoGrid"></div>
@@ -197,17 +189,21 @@
                 }
                 phase = 2;
                 instructionsElement.innerHTML = `
-                    <span><strong>En jeu :</strong> 
+                    <span><strong>En jeu :</strong><br> 
                     Valide tes cases prévues (<strong style="color: #27ae60;">vert</strong>) 
                     et celles non prévues (<strong style="color: #e67e22;">orange</strong>).</span>
                 `;
                 instructionsElement.style.borderLeftColor = "#2ecc71";
                 actionBtn.textContent = "Terminer la partie (Voir Score)";
+                
+                // Fait défiler la page vers le haut quand on passe en phase 2
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
             } else if (phase === 2) {
                 phase = 3;
                 calculateScore();
             } else if (phase === 3) {
-                location.reload(); // Rejouer
+                location.reload(); 
             }
         }
 
@@ -235,17 +231,19 @@
                 }
             });
 
-            // Affichage du score en haut à la place des instructions
             instructionsElement.style.borderLeftColor = "#f1c40f";
             instructionsElement.innerHTML = `
-                <div style="font-size: 1.2em; margin-bottom: 5px;"><strong>SCORE FINAL : ${score} points</strong></div>
-                <div style="font-size: 0.9em;">
-                    <span style="color: #27ae60; font-weight: bold;">✔ ${bonnes} justes (+${bonnes})</span> | 
-                    <span style="color: #c0392b; font-weight: bold;">✖ ${mauvaises} fausses (-${mauvaises})</span> | 
+                <div style="font-size: 1.3em; margin-bottom: 8px;"><strong>SCORE FINAL : ${score} points</strong></div>
+                <div style="font-size: 0.95em; line-height: 1.5;">
+                    <span style="color: #27ae60; font-weight: bold;">✔ ${bonnes} justes (+${bonnes})</span><br>
+                    <span style="color: #c0392b; font-weight: bold;">✖ ${mauvaises} fausses (-${mauvaises})</span><br>
                     <span style="color: #e67e22; font-weight: bold;">⚠ ${rates} non prévues (0)</span>
                 </div>
             `;
             actionBtn.textContent = "Rejouer une partie";
+            
+            // Fait défiler la page vers le haut pour voir le score
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
