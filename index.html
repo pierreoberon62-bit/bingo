@@ -2,23 +2,28 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bingo Mme Manchuelle</title>
     <style>
         * {
             box-sizing: border-box;
+        }
+        html {
+            overflow-y: auto; /* Sécurité pour autoriser le défilement */
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
             color: #333;
             margin: 0;
-            padding: 15px 10px 30px 10px; /* Un peu plus de marge en bas pour scroller confortablement */
-            min-height: 100vh; /* Prend au minimum 100% de l'écran, mais peut s'allonger */
+            padding: 15px 10px 40px 10px; /* Bonne marge en bas */
+            min-height: 100vh; 
+            height: auto; /* Permet à la page de grandir */
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            touch-action: pan-y; /* Dit au téléphone : "Laisse l'utilisateur scroller verticalement" */
         }
         h1 {
             color: #2c3e50;
@@ -42,7 +47,8 @@
             gap: 5px;
             width: 100%;
             max-width: 1000px;
-            flex-grow: 1;
+            margin-bottom: 10px;
+            touch-action: pan-y; /* Même autorisation sur la grille */
         }
         .cell {
             background-color: #fff;
@@ -60,7 +66,7 @@
             font-size: clamp(0.65rem, 2.5vw, 1rem); 
             word-wrap: break-word;
             line-height: 1.2;
-            min-height: 75px; /* Empêche les cases d'être trop petites sur téléphone */
+            min-height: 85px; /* Un peu plus hautes pour les doigts */
         }
         .cell:active {
             transform: scale(0.95);
@@ -105,6 +111,7 @@
             width: 100%;
             max-width: 400px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         button:hover {
             background-color: #1a252f;
@@ -141,7 +148,6 @@
         const instructionsElement = document.getElementById('instructions');
         const actionBtn = document.getElementById('actionBtn');
 
-        // Initialisation de la grille
         phrases.forEach((phrase, index) => {
             const cell = document.createElement('div');
             cell.className = 'cell';
@@ -196,7 +202,6 @@
                 instructionsElement.style.borderLeftColor = "#2ecc71";
                 actionBtn.textContent = "Terminer la partie (Voir Score)";
                 
-                // Fait défiler la page vers le haut quand on passe en phase 2
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 
             } else if (phase === 2) {
@@ -242,7 +247,6 @@
             `;
             actionBtn.textContent = "Rejouer une partie";
             
-            // Fait défiler la page vers le haut pour voir le score
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
